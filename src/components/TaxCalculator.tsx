@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SSNIT_RATE, monthlyTaxRates } from '../lib/rates';
 import { calculateIncomeTax } from '../lib/core';
-import { FaFacebook, FaTwitter, FaEnvelope } from "react-icons/fa";
+// import { FaFacebook, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 
 const TaxCalculator: React.FC = () => {
@@ -111,7 +111,84 @@ const TaxCalculator: React.FC = () => {
           </div>
         </div>
         
-      
+        <div className="flex justify-center mb-2">
+          <button 
+            className="border border-blue-500 text-blue-500 rounded px-4 py-2 hover:bg-blue-50"
+            onClick={() => setShowBreakdown(!showBreakdown)}
+          >
+            {showBreakdown ? 'Hide tax breakdown' : 'Show tax breakdown'}
+          </button>
+        </div>
+        
+        {showBreakdown && (
+            <div className="border-t border-gray-200 pt-4 mt-4">
+                <h3 className="font-bold text-lg mb-3">Tax Breakdown</h3>
+                <div className="flex flex-col gap-2">
+                <div className="flex justify-between">
+                    <span>Taxable Income:</span>
+                    <span>GH₵ {formatCurrency(basicIncome + allowances - ssnit - taxRelief)}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span>SSNIT Contribution ({SSNIT_RATE}%):</span>
+                    <span>GH₵ {formatCurrency(ssnit)}</span>
+                </div>
+
+                <div className="my-3 py-2 border-y border-gray-100">
+                    <div className="font-semibold mb-2">Income Tax Calculation:</div>
+
+                    {/* Header row */}
+                    <div className="flex text-sm font-medium border-b border-gray-200 pb-1 mb-2">
+                    <div className="flex-1">Taxable amount</div>
+                    <div className="w-16 text-center">Rate</div>
+                    <div className="w-24 text-right">Tax due (GH₵)</div>
+                    </div>
+
+                    {/* Data rows */}
+                    {monthlyTaxRates.rates.map((rate, index) => {
+                    const [percentage, band] = rate;
+                    let startAmount = 0;
+
+                    for (let i = 0; i < index; i++) {
+                        startAmount += monthlyTaxRates.rates[i][1];
+                    }
+
+                    const taxableIncome = basicIncome + allowances - ssnit - taxRelief;
+                    if (startAmount >= taxableIncome) return null;
+
+                    const amountInBracket = Math.min(
+                        band,
+                        Math.max(0, taxableIncome - startAmount)
+                    );
+
+                    const taxInBracket = (amountInBracket * percentage) / 100;
+
+                    if (amountInBracket <= 0) return null;
+
+                    return (
+                        <div key={index} className="flex text-sm py-1">
+                        <div className="flex-1">
+                            {index === 0 ? "First" : "Next"} GH₵ {formatCurrency(amountInBracket)}
+                        </div>
+                        <div className="w-16 text-center">{percentage}%</div>
+                        <div className="w-24 text-right">{formatCurrency(taxInBracket)}</div>
+                        </div>
+                    );
+                    })}
+                </div>
+
+                <div className="border-t border-gray-200 pt-2 mt-1">
+                    <div className="flex justify-between font-medium">
+                    <span>Total Income Tax:</span>
+                    <span>GH₵ {formatCurrency(incomeTax)}</span>
+                    </div>
+                    <div className="flex justify-between font-medium mt-1">
+                    <span>Total Deductions:</span>
+                    <span>GH₵ {formatCurrency(incomeTax + ssnit)}</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            )}
       </div>
     </div>
   );
