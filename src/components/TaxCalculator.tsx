@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SSNIT_RATE, monthlyTaxRates } from '../lib/rates';
 import { calculateIncomeTax } from '../lib/core';
-// import { FaFacebook, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 
 const TaxCalculator: React.FC = () => {
@@ -189,6 +189,54 @@ const TaxCalculator: React.FC = () => {
                 </div>
             </div>
             )}
+
+        
+        <p className="text-sm text-gray-600 mt-4">* Allowances are also taxed</p>
+      </div>
+      
+      <p className="text-sm text-gray-600 mt-4">Last updated: February 1st, 2024</p>
+      
+      <p className="text-s text-gray-500 mt-8 w-full text-center">
+        Disclaimer: We do our best to ensure the accuracy of this tool but we cannot be held responsible for any errors.
+      </p>
+      <p className="text-xs text-gray-500 mt-8 w-full text-center">
+        Send <b>feedback</b> and <b>suggestions</b> to <a
+            href="mailto:ankahdonatus@gmail"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold underline">
+            ankahdonatus@gmail.com
+        </a>{" "}
+      </p>
+      {/* Share with Others Section */}
+      <div className="border-t border-gray-200 pt-4 mt-4">
+        <h3 className="font-bold text-lg mb-3 text-center">Share with Others</h3>
+        <div className="flex gap-4">
+          {/* Facebook Share */}
+          <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-700 transition text-2xl">
+                <FaFacebook />
+            </a>
+
+            {/* X (Twitter) Share */}
+            <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check%20out%20this%20tax%20breakdown!`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black hover:text-gray-800 transition text-2xl">
+                <FaTwitter />
+            </a>
+
+            {/* Email Share */}
+            <a
+                href={`mailto:?subject=Tax Breakdown&body=Check%20out%20this%20tax%20breakdown%20at%20${encodeURIComponent(window.location.href)}`}
+                className="text-gray-600 hover:text-gray-700 transition text-2xl">
+                <FaEnvelope />
+            </a>
+        </div>
       </div>
     </div>
   );
